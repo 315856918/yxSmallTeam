@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>金额6份均分计算器</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, sans-serif;
+        }
+        body {
+            max-width: 520px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background: #f5f7fa;
+        }
+        .card {
+            background: #fff;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px #00000012;
+        }
+        h2 {
+            text-align: center;
+            color: #222;
+            margin-top:0;
+        }
+        .item-row {
+            display:flex;
+            gap:8px;
+            margin:10px 0;
+        }
+        input[type="number"] {
+            flex:1;
+            padding:10px;
+            font-size:16px;
+            border:1px solid #ddd;
+            border-radius:6px;
+        }
+        .btn-group {
+            margin:16px 0;
+            display:flex;
+            gap:10px;
+        }
+        button {
+            padding:10px 16px;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+            font-size:15px;
+        }
+        #addBtn {background:#409eff;color:white;}
+        #clearBtn {background:#999;color:white;}
+        .result-box {
+            margin-top:20px;
+            padding:16px;
+            background:#eef7ff;
+            border-radius:8px;
+            font-size:17px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>总金额 ÷ 6 均分</h2>
+        <div id="inputWrap">
+            <div class="item-row"><input type="number" step="0.01" placeholder="输入金额"></div>
+            <div class="item-row"><input type="number" step="0.01" placeholder="输入金额"></div>
+        </div>
+        <div class="btn-group">
+            <button id="addBtn">增加金额输入框</button>
+            <button id="clearBtn">清空全部</button>
+        </div>
+        <div class="result-box">
+            <div>总金额：<span id="total">0.00</span> 元</div>
+            <div style="margin-top:8px;font-weight:bold;">每份（6等分）：<span id="per">0.00</span> 元</div>
+        </div>
+    </div>
+
+    <script>
+        const inputWrap = document.getElementById('inputWrap');
+        const totalEl = document.getElementById('total');
+        const perEl = document.getElementById('per');
+        const addBtn = document.getElementById('addBtn');
+        const clearBtn = document.getElementById('clearBtn');
+
+        // 计算函数
+        function calc(){
+            let sum = 0;
+            const inputs = inputWrap.querySelectorAll('input');
+            inputs.forEach(inp=>{
+                const val = parseFloat(inp.value || 0);
+                sum += val;
+            })
+            const per = sum / 6;
+            totalEl.textContent = sum.toFixed(2);
+            perEl.textContent = per.toFixed(2);
+        }
+
+        // 监听已有输入框
+        function bindInput(input){
+            input.addEventListener('input', calc);
+        }
+        document.querySelectorAll('input').forEach(bindInput);
+
+        // 添加输入框
+        addBtn.onclick = ()=>{
+            const div = document.createElement('div');
+            div.className = 'item-row';
+            const inp = document.createElement('input');
+            inp.type = 'number';
+            inp.step="0.01";
+            inp.placeholder="输入金额";
+            div.appendChild(inp);
+            inputWrap.appendChild(div);
+            bindInput(inp);
+        }
+
+        // 清空
+        clearBtn.onclick = ()=>{
+            const inputs = inputWrap.querySelectorAll('input');
+            inputs.forEach(inp=>inp.value='');
+            calc();
+        }
+    </script>
+</body>
+</html>
